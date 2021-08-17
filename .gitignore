@@ -1,0 +1,12 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# ignore all .ipynb_checkpoints
+.ipynb_checkpoints
+
+# PyBuilder
+.idea/
+
+# Data folder
+data/
