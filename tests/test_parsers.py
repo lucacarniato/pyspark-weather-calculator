@@ -1,14 +1,17 @@
 from datetime import datetime as dt
 
 from pytest import approx
-from weathercalculator.FileParser import (cast_string_value_to_type,
-                                          head_tokenizer, row_tokenizer)
+from weathercalculator.FileParser import (
+    cast_string_value_to_type,
+    head_tokenizer,
+    row_tokenizer,
+)
 from weathercalculator.ValueTypes import ValueTypes
 
 
 def test_header_tokenizer():
     header = "# DTG                LOCATION            NAME                                            LATITUDE "
-    positions = head_tokenizer(header)
+    positions = head_tokenizer(header, "#")
     assert positions["DTG"][0] == 0
     assert positions["DTG"][1] == 20
     assert positions["LOCATION"][0] == 21
@@ -22,7 +25,7 @@ def test_header_tokenizer():
 def test_row_tokenizer():
     header = "# DTG                LOCATION            NAME                                            LATITUDE"
     row = "2003-04-01 00:10:00  235_T_obs           De Kooy waarneemterrein                         52.92694"
-    positions = head_tokenizer(header)
+    positions = head_tokenizer(header, "#")
 
     column_names = ["DTG", "LOCATION", "NAME", "LATITUDE"]
     column_types = {
