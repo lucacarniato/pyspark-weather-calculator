@@ -1,8 +1,11 @@
 from datetime import datetime as dt
 
 from pytest import approx
-from weathercalculator.FileParser import (cast_string_value_to_type,
-                                          header_tokenizer, row_tokenizer)
+from weathercalculator.FileParsers import (
+    cast_string_value_to_type,
+    header_tokenizer,
+    row_tokenizer,
+)
 from weathercalculator.ValueTypes import ValueTypes
 
 
