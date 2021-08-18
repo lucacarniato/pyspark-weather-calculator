@@ -1,1 +1,1 @@
-D:\Apps\python_3_8_6\python.exe run.py
+%PYTHON_HOME%\python.exe run.py
