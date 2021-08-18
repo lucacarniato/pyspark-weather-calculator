@@ -1,4 +1,5 @@
 import os
+from datetime import datetime as dt
 from os import listdir
 from os.path import isfile, join
 
@@ -6,24 +7,20 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, countDistinct
 from pyspark.sql.functions import max as pyspark_max
 from pyspark.sql.functions import min as pyspark_min
-from pyspark.sql.functions import row_number, to_date
-from pyspark.sql.types import (
-    FloatType,
-    StringType,
-    StructField,
-    StructType,
-    TimestampType,
-)
+from pyspark.sql.functions import to_date
+from pyspark.sql.types import (FloatType, StringType, StructField, StructType,
+                               TimestampType)
 
 from weathercalculator.FileParsers import FileParser
 from weathercalculator.Utils import pairwise_union
 from weathercalculator.ValueTypes import ValueTypes
 
-raw_data_path = "../../data/raw_data"
-transformed_data_path = "../../data/transformed"
 
-
-def daily_min_max(start_date, end_date):
+def daily_min_max(
+    raw_data_path,
+    start_date=dt(2003, 4, 1, 00, 00, 00),
+    end_date=dt(2019, 3, 31, 00, 00, 00),
+):
     spark = SparkSession.builder.appName("compute_heat_waves").getOrCreate()
     spark_context = spark.sparkContext
 
@@ -59,9 +56,13 @@ def daily_min_max(start_date, end_date):
                 column_names=column_names,
                 column_types=column_types,
             )
-            df = file_parser.parse().toDF(schema=schema)
-            print("Iteration {}".format(iteration))
-            dfs.append(df)
+
+            # process only files required by the time interval
+            start_date_local_file, end_date_local_file = file_parser.parse_period()
+            if start_date_local_file >= start_date and end_date_local_file <= end_date:
+                df = file_parser.parse().toDF(schema=schema)
+                print("Iteration {}".format(iteration))
+                dfs.append(df)
         except ValueError:
             print(
                 "Error found for file {}, iteration {}, quitting application".format(
@@ -85,9 +86,5 @@ def daily_min_max(start_date, end_date):
 
     # Now the dataset is reduced to a small size panda dataframe, where we can to iterate over
     union_df_final_pd = union_df.toPandas().set_index("Dates")
-
-    # Cache the result for similar queries later on
-    csv_file = "with_dates.csv"
-    transformed_data_path.to_csv(csv_file, header=True)
 
     return union_df_final_pd

@@ -5,15 +5,16 @@ from tabulate import tabulate
 
 from weathercalculator import Calculators, Transformers, Utils
 
-pyspark_submit_args = "--executor-memory 10g pyspark-shell"
-os.environ["PYSPARK_SUBMIT_ARGS"] = pyspark_submit_args
+raw_data_path = "./data/raw_data"
 
 if __name__ == "__main__":
-    # data_dir_path = "data/uncompressed"
-    # df = Transformers.daily_min_max(data_dir_path)
 
-    path = "tests/data/daily_min_max_temperatures.csv"
-    df = pd.read_csv(path)
+    # activate in production
+    # df = Transformers.daily_min_max()
+
+    # used cached data
+    cache_path = "./data/cache/2003_4_1_2019_3_31"
+    df = pd.read_csv(cache_path)
     df["Dates"] = pd.to_datetime(df["Dates"])
     df = df.set_index("Dates").sort_index(ascending=True)
 

@@ -1,4 +1,8 @@
 def pairwise_union(dataframes_list):
+
+    if len(dataframes_list) == 1:
+        return dataframes_list[0]
+
     while len(dataframes_list) > 1:
         unified_df = [
             df1.union(df2).distinct()

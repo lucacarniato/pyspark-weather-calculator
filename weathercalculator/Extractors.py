@@ -1,4 +1,3 @@
-# Functions to download data from KNMI
 from datetime import datetime
 from os import path
 from pathlib import Path
@@ -10,7 +9,7 @@ api_version = "v1"
 raw_data_path = "../../data/raw_data"
 
 
-def get_latest_10min_data():
+def get_data():
 
     # temporary public token
     api_key = "eyJvcmciOiI1ZTU1NGUxOTI3NGE5NjAwMDEyYTNlYjEiLCJpZCI6ImNjOWE2YjM3ZjVhODQwMDZiMWIzZGIzZDRjYzVjODFiIiwiaCI6Im11cm11cjEyOCJ9"
@@ -43,7 +42,12 @@ def get_latest_10min_data():
     if dataset_file_response.status_code != 200:
         return
 
-    # Write dataset file to disk
+    return dataset_file_response
+
+
+def write_data(dataset_file_response, filename):
+
+    # Write dataset file to raw data
     abs_dir_path = path.abspath(raw_data_path)
     absolute_file_name = path.join(abs_dir_path, filename)
 

@@ -1,7 +1,8 @@
 from datetime import datetime as dt
 
 import pandas as pd
-from weathercalculator.Calculators import compute_cold_waves, compute_heat_waves
+from weathercalculator.Calculators import (compute_cold_waves,
+                                           compute_heat_waves)
 
 
 def test_compute_heat_waves():
@@ -23,8 +24,8 @@ def test_compute_heat_waves():
 
     assert len(heat_waves) == 9
     assert heat_waves[0] == [
-        dt(2003, 7, 31, 00, 00, 00),
-        dt(2003, 8, 13, 00, 00, 00),
+        dt(2003, 7, 31),
+        dt(2003, 8, 13),
         13,
         7,
         35,
@@ -50,8 +51,8 @@ def test_compute_cold_waves():
 
     assert len(cold_waves) == 1
     assert cold_waves[0] == [
-        dt(2012, 1, 30, 00, 00, 00),
-        dt(2012, 2, 8, 00, 00, 00),
+        dt(2012, 1, 30),
+        dt(2012, 2, 8),
         9,
         6,
         -18.8,

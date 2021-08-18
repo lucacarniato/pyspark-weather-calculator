@@ -93,6 +93,15 @@ def row_tokenizer(string_value, item_positions, column_names, column_types):
     return result
 
 
+def parse_period(string_values):
+    for row in string_values:
+        for match in re.finditer("temporal_extent=", row):
+            date_str = row[match.end() :].split(" - ")
+            start = dt.strptime(date_str[0].strip(), "%Y-%m-%dT%H:%M:%SZ")
+            end = dt.strptime(date_str[1].strip(), "%Y-%m-%dT%H:%M:%SZ")
+            return start, end
+
+
 class FileParser:
     """Class parsing a large text file with PySpark"""
 
@@ -131,6 +140,9 @@ class FileParser:
         self.filter_value = filter_value
 
         self.first_rows = self.rdd.take(self.header_estimated_length)
+
+    def parse_period(self):
+        return parse_period(self.first_rows)
 
     def parse(self):
         """Implements the parsing operations.
