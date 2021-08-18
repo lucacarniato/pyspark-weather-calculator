@@ -2,7 +2,6 @@ from datetime import datetime as dt
 
 import pandas as pd
 from weathercalculator.App import compute_cold_waves, compute_heat_waves
-from weathercalculator.Utils import print_hot_waves
 
 
 def test_compute_heat_waves():
@@ -29,8 +28,6 @@ def test_compute_heat_waves():
         13,
         7,
     ]
-
-    print_hot_waves(heat_waves)
 
 
 def test_compute_cold_waves():
