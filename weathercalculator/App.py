@@ -1,9 +1,10 @@
 import os
+from collections import deque
 from os import listdir
 from os.path import isfile, join
-from collections import deque
-import numpy as np
 
+import numpy as np
+import pandas as pd
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, countDistinct
 from pyspark.sql.functions import max as pyspark_max
@@ -80,42 +81,62 @@ def daily_max_min(dir_path):
 
     # Now the dataset is reduced to a small size panda dataframe, where we can to iterate over
     union_df_final_pd = union_df.toPandas().set_index("Dates")
+    # union_df_final_pd.to_csv("union_df_final_pd.csv", header=True)
 
     return union_df_final_pd
 
-def compute_heat_waves(dir_path, duration=5, temperature=25, duration_max_temperature=3, max_temperature=30):
 
-    df = daily_max_min(dir_path)
-    #union_df_final_pd.to_csv("union_df_final_pd.csv", header=True)
+def compute_heat_waves(
+    df, duration=5, temperature=25, duration_max_temperature=3, max_temperature=30
+):
 
     are_last_days_hot = False
     start_hot_days = None
     end_hot_days = None
     num_tropical_days = 0
     heat_waves = []
-    max_temp_column = 'max(TX_DRYB_10)'
+    max_temp_column = "max(TX_DRYB_10)"
 
     index_deque = deque(maxlen=duration)
     for date in df.index:
         index_deque.append(date)
-        if len(index_deque) == duration:
-            df_slice = df.loc[index_deque]
-            min_temp = np.min(df_slice[max_temp_column].values)
 
-            if min_temp > temperature and not are_last_days_hot:
-                start_hot_days = index_deque[0]
-                end_hot_days = index_deque[-1]
-                num_tropical_days = num_tropical_days + len(
-                    df_slice.loc[df[max_temp_column] > max_temperature].values)
-            if min_temp > temperature and are_last_days_hot:
-                end_hot_days = index_deque[-1]
-                if df_slice.loc[index_deque[-1]][max_temp_column] > max_temperature:
-                    num_tropical_days = num_tropical_days + 1
-            if min_temp <= temperature and are_last_days_hot:
-                are_last_days_hot = False
-                if num_tropical_days >= duration_max_temperature:
-                    heat_waves.append([start_hot_days, end_hot_days, num_tropical_days])
-                    
+        if len(index_deque) < duration:
+            continue
+
+        df_slice = df.loc[index_deque]
+        min_temp = np.min(df_slice[max_temp_column].values)
+
+        if min_temp > temperature and not are_last_days_hot:
+            are_last_days_hot = True
+            start_hot_days = index_deque[0]
+            end_hot_days = index_deque[-1]
+            num_tropical_days = num_tropical_days + len(
+                df_slice.loc[df[max_temp_column] > max_temperature].values
+            )
+
+        if min_temp > temperature and are_last_days_hot:
+            end_hot_days = index_deque[-1]
+            if df_slice.loc[index_deque[-1]][max_temp_column] > max_temperature:
+                num_tropical_days = num_tropical_days + 1
+
+        if min_temp <= temperature and are_last_days_hot:
+            are_last_days_hot = False
+            if num_tropical_days >= duration_max_temperature:
+                heat_wave_duration = end_hot_days - start_hot_days
+                heat_waves.append(
+                    [
+                        start_hot_days,
+                        end_hot_days,
+                        heat_wave_duration.days,
+                        num_tropical_days,
+                    ]
+                )
+            start_hot_days = None
+            end_hot_days = None
+            num_tropical_days = 0
+
     return heat_waves
 
-def compute_cold_waves(dir_path, duration=5, temperature=25):
+
+# def compute_cold_waves(dir_path, duration=5, temperature=25):
