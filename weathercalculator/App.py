@@ -1,5 +1,6 @@
 import os
 from collections import deque
+from datetime import timedelta
 from os import listdir
 from os.path import isfile, join
 
@@ -99,30 +100,33 @@ def compute_heat_waves(
     start_hot_days = None
     end_hot_days = None
     num_tropical_days = 0
+    max_temp_in_heat_wave = -1000.0
     heat_waves = []
     max_temp_column = "max(TX_DRYB_10)"
 
-    index_deque = deque(maxlen=duration)
-    for date in df.index:
-        index_deque.append(date)
+    for date in df.index[duration - 1 :]:
 
-        if len(index_deque) < duration:
-            continue
-
-        df_slice = df.loc[index_deque]
+        start_date = date + timedelta(days=-(duration - 1))
+        df_slice = df.loc[start_date:date]
         min_temp = np.min(df_slice[max_temp_column].values)
 
         if min_temp > temperature and not are_last_days_hot:
             are_last_days_hot = True
-            start_hot_days = index_deque[0]
-            end_hot_days = index_deque[-1]
-            num_tropical_days = num_tropical_days + len(
-                df_slice.loc[df[max_temp_column] > max_temperature].values
+            start_hot_days = start_date
+            end_hot_days = date
+            tropical_temperatures = df_slice.loc[
+                df_slice[max_temp_column] > max_temperature
+            ].values
+            max_temp_in_heat_wave = max(
+                max_temp_in_heat_wave, np.max(df_slice[max_temp_column].values)
             )
+            num_tropical_days = num_tropical_days + len(tropical_temperatures)
 
         if min_temp > temperature and are_last_days_hot:
-            end_hot_days = index_deque[-1]
-            if df_slice.loc[index_deque[-1]][max_temp_column] > max_temperature:
+            end_hot_days = date
+            last_max_temperature = df_slice.loc[date][max_temp_column]
+            if last_max_temperature > max_temperature:
+                max_temp_in_heat_wave = max(max_temp_in_heat_wave, last_max_temperature)
                 num_tropical_days = num_tropical_days + 1
 
         if min_temp <= temperature and are_last_days_hot:
@@ -135,11 +139,13 @@ def compute_heat_waves(
                         end_hot_days,
                         heat_wave_duration.days,
                         num_tropical_days,
+                        max_temp_in_heat_wave,
                     ]
                 )
             start_hot_days = None
             end_hot_days = None
             num_tropical_days = 0
+            max_temp_in_heat_wave = -1000.0
 
     return heat_waves
 
@@ -154,32 +160,36 @@ def compute_cold_waves(
     start_freezing_days = None
     end_freezing_days = None
     num_high_frost_days = 0
+    min_temp_in_cold_wave = 1000.0
     cold_waves = []
     max_temp_column = "max(TX_DRYB_10)"
     min_temp_column = "min(TX_DRYB_10)"
 
-    index_deque = deque(maxlen=duration)
-    for date in df.index:
-        index_deque.append(date)
+    for date in df.index[duration - 1 :]:
 
-        if len(index_deque) < duration:
-            continue
+        start_date = date + timedelta(days=-(duration - 1))
+        df_slice = df.loc[start_date:date]
 
-        df_slice = df.loc[index_deque]
         max_temp = np.max(df_slice[max_temp_column].values)
 
         if max_temp < temperature and not are_last_days_freezing:
             are_last_days_freezing = True
-            start_freezing_days = index_deque[0]
-            end_freezing_days = index_deque[-1]
-            num_high_frost_days = num_high_frost_days + len(
-                df_slice.loc[df[min_temp_column] < min_temperature].values
+            start_freezing_days = start_date
+            end_freezing_days = date
+            high_frost_temperatures = df_slice.loc[
+                df_slice[min_temp_column] < min_temperature
+            ].values
+            num_high_frost_days = num_high_frost_days + len(high_frost_temperatures)
+            min_temp_in_cold_wave = min(
+                min_temp_in_cold_wave, np.min(df_slice[min_temp_column].values)
             )
 
         if max_temp < temperature and are_last_days_freezing:
-            end_freezing_days = index_deque[-1]
-            if df_slice.loc[index_deque[-1]][min_temp_column] < min_temperature:
+            end_freezing_days = date
+            last_min_temperature = df_slice.loc[date][min_temp_column]
+            if last_min_temperature < min_temperature:
                 num_high_frost_days = num_high_frost_days + 1
+                min_temp_in_cold_wave = min(min_temp_in_cold_wave, last_min_temperature)
 
         if max_temp >= temperature and are_last_days_freezing:
             are_last_days_freezing = False
@@ -191,10 +201,12 @@ def compute_cold_waves(
                         end_freezing_days,
                         high_frost_duration.days,
                         num_high_frost_days,
+                        min_temp_in_cold_wave,
                     ]
                 )
             start_freezing_days = None
             end_freezing_days = None
             num_high_frost_days = 0
+            min_temp_in_cold_wave = 1000.0
 
     return cold_waves

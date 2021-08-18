@@ -27,6 +27,7 @@ def test_compute_heat_waves():
         dt(2003, 8, 13, 00, 00, 00),
         13,
         7,
+        35,
     ]
 
 
@@ -53,4 +54,5 @@ def test_compute_cold_waves():
         dt(2012, 2, 8, 00, 00, 00),
         9,
         6,
+        -18.8,
     ]

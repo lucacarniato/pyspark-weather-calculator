@@ -18,6 +18,7 @@ def format_waves(waves):
             wave[1].strftime("%b %d %Y"),
             str(wave[2]),
             str(wave[3]),
+            str(wave[4]),
         ]
         for wave in waves
     ]

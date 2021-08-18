@@ -28,6 +28,7 @@ if __name__ == "__main__":
                 "To date (inc.)",
                 "Duration (in days)",
                 "Number of tropical days",
+                "Max temperature",
             ],
             tablefmt="orgtbl",
         )
@@ -44,6 +45,7 @@ if __name__ == "__main__":
                 "To date (inc.)",
                 "Duration (in days)",
                 "Number of high frost days",
+                "Min temperature",
             ],
             tablefmt="orgtbl",
         )
