@@ -34,11 +34,15 @@ Cold waves
 | ------------| -------------  | ------------------ | ------------------------- | --------------- |
 | Jan 30 2012 | Feb 08 2012    |                  9 |                         6 |           -18.8 |
 
-To execute the application with cached data use the following command
+To run the application in Windows using Docker type following command commands:
 
-To execute the application with raw data use the following command
+    docker build -t weathercalculator .
+    docker run -v %cd%:/job weathercalculator /job/run.py
+    
+To run the application in Linux using Docker type following command commands:
 
-To run the application in docker use the following command
+    docker build -t weathercalculator .
+    docker run -v $(pwd):/job weathercalculator /job/run.py
 
 ## Application design
 
