@@ -34,13 +34,37 @@ Cold waves
 | ------------| -------------  | ------------------ | ------------------------- | --------------- |
 | Jan 30 2012 | Feb 08 2012    |                  9 |                         6 |           -18.8 |
 
+To execute the application with cached data use the following command
+
+To execute the application with raw data use the following command
+
+To run the application in docker use the following command
+
 ## Application design
 
 The application is organized as follow:
-dir structure with what things do
++ data:
+    + raw_data directory to store downloaded data
+    + cache directory to store the results of the transformations.
+These results might be reused when a client application requests to calculate the heat waves within a period where the maximum
+and minimum daily temperature where already calculated.
++ scripts: contains the Jupyter notebook used in the application prototyping phase
++ tests:
+    + data: contains the data used by the unit tests
+    + unit: contains some  tests to verify the correctness of the parsing functions (tokenizers) and heat/cold waves calculators
++ weathercalculator: contains the Python package. Most of the code is implemented as self standing functions, 
+to facilitate a future implementation of an AirFlow ETL job.
+    + Extractors.py: can contain the functions used for downloading KNMI data into data/raw_data.
+    + Transformers.py: contains the functions used to process and transform the data contained in data/raw_data. 
+    This file contains the PySpark queries used for computing the maximum and minimum daily temperatures from the 10 minutes raw data 
+    measurements (20Gb of text data).The result of daily_min_max is a reduced pandas dataframe of 150KB. 
+    + Calculators.py: contains the functions used for calculating the heat and cold waves from the reduced dataframe.
 
-The application is implemented as a Python package. 
-
+The directory structure facilitates extending the applications with additional Transformers or Calculators.
 
 # Future work
 
++ Implement data extractors in weathercalculator/Extractors.py for downloading KNMI data into data/raw_data 
++ Implement an Apache Airflow ETL job by using the functions in Extractors/Transformers/Calculators
++ Implement Cache invalidation mechanism
++ Implement a REST for the application (e.g. using Flask)
