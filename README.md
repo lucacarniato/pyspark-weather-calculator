@@ -57,7 +57,7 @@ to facilitate a future implementation of an AirFlow ETL job.
     + Extractors.py: can contain the functions used for downloading KNMI data into data/raw_data.
     + Transformers.py: contains the functions used to process and transform the data contained in data/raw_data. 
     This file contains the PySpark queries used for computing the maximum and minimum daily temperatures from the 10 minutes raw data 
-    measurements (20Gb of text data).The result of daily_min_max is a reduced pandas dataframe of 150KB. 
+    measurements (20Gb of text data).The result of daily_min_max is a reduced pandas dataframe of 144KB. 
     + Calculators.py: contains the functions used for calculating the heat and cold waves from the reduced dataframe.
 
 The directory structure facilitates extending the applications with additional Transformers or Calculators.
