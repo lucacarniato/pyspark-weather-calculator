@@ -141,9 +141,6 @@ class FileParser:
 
         self.first_rows = self.rdd.take(self.header_estimated_length)
 
-    def parse_period(self):
-        return parse_period(self.first_rows)
-
     def parse(self):
         """Implements the parsing operations.
 

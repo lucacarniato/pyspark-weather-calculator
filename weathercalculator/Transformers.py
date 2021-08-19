@@ -70,11 +70,9 @@ def daily_min_max(raw_data_path):
             )
 
             # process only files required by the time interval
-            start_date_local_file, end_date_local_file = file_parser.parse_period()
-            if start_date_local_file >= start_date and end_date_local_file <= end_date:
-                df = file_parser.parse().toDF(schema=schema)
-                print("Iteration {}".format(iteration))
-                dfs.append(df)
+            df = file_parser.parse().toDF(schema=schema)
+            print("Iteration {}".format(iteration))
+            dfs.append(df)
         except ValueError:
             print(
                 "Error found for file {}, iteration {}, quitting application".format(
