@@ -8,24 +8,33 @@ from pyspark.sql.functions import col, countDistinct
 from pyspark.sql.functions import max as pyspark_max
 from pyspark.sql.functions import min as pyspark_min
 from pyspark.sql.functions import to_date
-from pyspark.sql.types import (FloatType, StringType, StructField, StructType,
-                               TimestampType)
+from pyspark.sql.types import (
+    FloatType,
+    StringType,
+    StructField,
+    StructType,
+    TimestampType,
+)
 
 from weathercalculator.FileParsers import FileParser
 from weathercalculator.Utils import pairwise_union
 from weathercalculator.ValueTypes import ValueTypes
 
 
-def daily_min_max(
-    raw_data_path,
-    start_date=dt(2003, 4, 1, 00, 00, 00),
-    end_date=dt(2019, 3, 31, 00, 00, 00),
-):
+def daily_min_max(raw_data_path):
+    """Computes the daily minimum and maximum temperatures from raw data
+
+    Args:
+        raw_data_path (string): The path where the raw data file with intraday temperature measurements are located.
+
+    Returns:
+        A data frame containing the daily min and max temperatures
+    """
     spark = SparkSession.builder.appName("daily_min_max").getOrCreate()
     spark_context = spark.sparkContext
-    #spark_context.addFile('/job/weathercalculator/FileParsers.py')
-    #spark_context.addFile('/job/weathercalculator/Extractors.py')
-    #spark_context.addFile('/job/weathercalculator/Calculators.py')
+    # spark_context.addFile('/job/weathercalculator/FileParsers.py')
+    # spark_context.addFile('/job/weathercalculator/Extractors.py')
+    # spark_context.addFile('/job/weathercalculator/Calculators.py')
 
     column_names = ["DTG", "NAME", "TX_DRYB_10"]
     column_types = {

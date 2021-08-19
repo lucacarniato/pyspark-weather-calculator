@@ -4,10 +4,21 @@ import numpy as np
 
 
 def compute_heat_waves(
-    df, duration=5, temperature=25, duration_max_temperature=3, max_temperature=30
+    df, duration=5, temperature=25, min_tropical_days_num=3, max_temperature=30
 ):
-    """ "Heat wave is a period of at least 5 consecutive days in which the maximum temperature in De Bilt exceeds 25 °C.
-    Additionally, during this 5 day period, the maximum temperature in De Bilt should exceed 30 °C for at least 3 days."""
+    """Computes the heatwaves periods from a provided data frame
+
+    Args:
+        df (DataFrame): The data frame containing the dates and the minimum and maximum temperatures.
+        duration (int): The minimum duration of a cold wave in days.
+        temperature (float): The minimum temperature during heatwaves.
+        min_tropical_days_num (int): The minimum number of tropical days.
+        max_temperature (float): The min temperature during tropical days.
+
+    Returns:
+        A list containing the start and end dates of all heatwaves, their durations, the number of tropical days
+        and the maximum temperatures during the heatwaves.
+    """
 
     are_last_days_hot = False
     start_hot_days = None
@@ -44,7 +55,7 @@ def compute_heat_waves(
 
         if min_temp <= temperature and are_last_days_hot:
             are_last_days_hot = False
-            if num_tropical_days >= duration_max_temperature:
+            if num_tropical_days >= min_tropical_days_num:
                 heat_wave_duration = end_hot_days - start_hot_days
                 heat_waves.append(
                     [
@@ -64,10 +75,25 @@ def compute_heat_waves(
 
 
 def compute_cold_waves(
-    df, duration=5, temperature=0, duration_min_temperature=3, min_temperature=-10.0
+    df,
+    duration=5,
+    temperature=0,
+    min_high_frost_days_num=3,
+    high_frost_temperature=-10.0,
 ):
-    """A coldwave is a period of excessively cold weather with a minimum of five consecutive days below freezing
-    (max temperature below 0.0 °C) and at least three days with high frost (min temperature is lower than -10.0 °C)."""
+    """Computes the heatwaves periods from a provided data frame
+
+    Args:
+        df (DataFrame): The data frame containing the dates and the minimum and maximum temperatures.
+        duration (int): The minimum duration of a cold wave in days.
+        temperature (float): The maximum temperature during the cold waves.
+        min_high_frost_days_num (int): The minimum number of high frost days.
+        high_frost_temperature (float): The maximum temperature during high frost days.
+
+    Returns:
+        A list containing the start and end dates of all cold waves, their duration, the number of high frost days
+        and the minimum temperatures during the cold waves.
+    """
 
     are_last_days_freezing = False
     start_freezing_days = None
@@ -89,10 +115,10 @@ def compute_cold_waves(
             are_last_days_freezing = True
             start_freezing_days = start_date
             end_freezing_days = date
-            high_frost_temperatures = df_slice.loc[
-                df_slice[min_temp_column] < min_temperature
+            high_frost_temperature = df_slice.loc[
+                df_slice[min_temp_column] < high_frost_temperature
             ].values
-            num_high_frost_days = num_high_frost_days + len(high_frost_temperatures)
+            num_high_frost_days = num_high_frost_days + len(high_frost_temperature)
             min_temp_in_cold_wave = min(
                 min_temp_in_cold_wave, np.min(df_slice[min_temp_column].values)
             )
@@ -100,13 +126,13 @@ def compute_cold_waves(
         if max_temp < temperature and are_last_days_freezing:
             end_freezing_days = date
             last_min_temperature = df_slice.loc[date][min_temp_column]
-            if last_min_temperature < min_temperature:
+            if last_min_temperature < high_frost_temperature:
                 num_high_frost_days = num_high_frost_days + 1
                 min_temp_in_cold_wave = min(min_temp_in_cold_wave, last_min_temperature)
 
         if max_temp >= temperature and are_last_days_freezing:
             are_last_days_freezing = False
-            if num_high_frost_days >= duration_min_temperature:
+            if num_high_frost_days >= min_high_frost_days_num:
                 high_frost_duration = end_freezing_days - start_freezing_days
                 cold_waves.append(
                     [

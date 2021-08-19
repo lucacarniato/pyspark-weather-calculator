@@ -1,14 +1,14 @@
 # Weather calculator
 
-The Python package weathercalculator solves Go Data Driven challenge of calculating the heat waves in the Netherlands,
-as defined by KNMI. An heat wave is defined as follow:
+The Python package weathercalculator solves Go Data Driven challenge of calculating the heat waves in the Netherlands. 
+A heatwave is defined as follow:
 
-"The KNMI defines a heat wave as a period of at least 5 consecutive days in which the maximum temperature in De Bilt exceeds 25 °C.
-Additionally, during this 5 day period, the maximum temperature in De Bilt should exceed 30 °C for at least 3 days."
+"The KNMI defines a heatwave as a period of at least 5 consecutive days in which the maximum temperature in De Bilt exceeds 25 °C.
+Additionally, during these 5 day period, the maximum temperature in De Bilt should exceed 30 °C for at least 3 days."
 
 The application gives the following results:
 
-Heat waves
+Heatwaves
 
 | From date   | To date (inc.) | Duration (in days) | Number of tropical days | Max temperature |
 | ------------| -------------  | ------------------ | ----------------------- | --------------- |
@@ -23,7 +23,7 @@ Heat waves
 | Jul 29 2018 | Aug 07 2018    |                  9 |                       4 |            33.9 |
 
 
-As bonus point, the cold waves were also caomputed.Cold waves are defined as follow:
+As a bonus point, the cold waves were also computed. Cold waves are defined as follow:
 
 "A cold wave is a period of excessively cold weather with a minimum of five consecutive days below 
 freezing (max temperature below 0.0 °C) and at least three days with high frost (min temperature is lower than -10.0 °C)."
@@ -43,28 +43,28 @@ To run the application in docker use the following command
 ## Application design
 
 The application is organized as follow:
-+ data:
-    + raw_data directory to store downloaded data
-    + cache directory to store the results of the transformations.
-These results might be reused when a client application requests to calculate the heat waves within a period where the maximum
-and minimum daily temperature where already calculated.
-+ scripts: contains the Jupyter notebook used in the application prototyping phase
++ data, containing the following sub-directories:
+    + raw_data directory to store downloaded data.
+    + cache directory to store the results of the transformations. These results can be reused when a client application 
+    requests to calculate heatwaves within a period that has been calculated already.
++ scripts: contains the Jupyter notebook using during the prototyping phase.
 + tests:
-    + data: contains the data used by the unit tests
-    + unit: contains some  tests to verify the correctness of the parsing functions (tokenizers) and heat/cold waves calculators
-+ weathercalculator: contains the Python package. Most of the code is implemented as self standing functions, 
-to facilitate a future implementation of an AirFlow ETL job.
-    + Extractors.py: can contain the functions used for downloading KNMI data into data/raw_data.
-    + Transformers.py: contains the functions used to process and transform the data contained in data/raw_data. 
-    This file contains the PySpark queries used for computing the maximum and minimum daily temperatures from the 10 minutes raw data 
-    measurements (20Gb of text data).The result of daily_min_max is a reduced pandas dataframe of 144KB. 
-    + Calculators.py: contains the functions used for calculating the heat and cold waves from the reduced dataframe.
+    + data: contains the data used by the unit tests.
+    + unit: contains some tests to verify the correctness of the parsing functions (tokenizers) and heat/cold waves calculators.
++ weathercalculator: contains the Python package. Most of the code is implemented as self-standing functions, 
+to facilitate future implementation of an AirFlow ETL job.
+    + Extractors.py: can contain the functions for downloading KNMI data and save them into data/raw_data.
+    + Transformers.py: contains the functions used to process the files contained in data/raw_data. 
+    This file implements the PySpark queries used for computing the maximum and minimum daily temperatures from 10 minute data. 
+    The result of daily_min_max function is a reduced pandas data frame of 144KB. 
+    + Calculators.py: contains the functions used for calculating the heat and cold waves from the reduced data frame.
 
-The directory structure facilitates extending the applications with additional Transformers or Calculators.
+This directory structure facilitates extending the applications with additional Extractors, Transformers or Calculators.
 
 # Future work
 
-+ Implement data extractors in weathercalculator/Extractors.py for downloading KNMI data into data/raw_data 
-+ Implement an Apache Airflow ETL job by using the functions in Extractors/Transformers/Calculators
-+ Implement Cache invalidation mechanism
-+ Implement a REST for the application (e.g. using Flask)
++ Implement data extractors in weathercalculator/Extractors.py for downloading data.
++ Implement an Apache Airflow ETL job
++ Implement the Cache invalidation mechanism for the cached filed stored in data/cache, for example when a heatwave or 
+a cold wave needs to be computed for a period outside the one already computed. 
++ Implement a REST API for using the results of the application (e.g. using Flask).
