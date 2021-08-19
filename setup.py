@@ -24,12 +24,32 @@ def read(rel_path: str) -> str:
         return fp.read()
 
 
-long_description = read("README.md")
+try:
+    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+
+    class bdist_wheel(_bdist_wheel):
+        """Class describing our wheel.
+        """
+
+        def finalize_options(self):
+            _bdist_wheel.finalize_options(self)
+            # Mark us as not a pure python package
+            self.root_is_pure = True
+
+        def get_tag(self):
+            python, abi, plat = _bdist_wheel.get_tag(self)
+            # We don't contain any python source
+            python, abi = "py3", "none"
+            return python, abi, plat
+
+
+except ImportError:
+    bdist_wheel = None
+
 
 setup(
     name="weathercalculator",
     description="`weathercalculator` calculates head waves and cold waves.",
-    long_description=long_description,
     long_description_content_type="text/markdown",
     author=__author__,
     author_email=__author_email__,
@@ -43,6 +63,6 @@ setup(
             "isort",
         ],
     },
-    python_requires=">=3.8",
+    cmdclass={"bdist_wheel": bdist_wheel},
     packages=["weathercalculator"],
 )

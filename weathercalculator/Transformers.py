@@ -8,13 +8,8 @@ from pyspark.sql.functions import col, countDistinct
 from pyspark.sql.functions import max as pyspark_max
 from pyspark.sql.functions import min as pyspark_min
 from pyspark.sql.functions import to_date
-from pyspark.sql.types import (
-    FloatType,
-    StringType,
-    StructField,
-    StructType,
-    TimestampType,
-)
+from pyspark.sql.types import (FloatType, StringType, StructField, StructType,
+                               TimestampType)
 
 from weathercalculator.FileParsers import FileParser
 from weathercalculator.Utils import pairwise_union
@@ -32,9 +27,12 @@ def daily_min_max(raw_data_path):
     """
     spark = SparkSession.builder.appName("daily_min_max").getOrCreate()
     spark_context = spark.sparkContext
-    # spark_context.addFile('/job/weathercalculator/FileParsers.py')
-    # spark_context.addFile('/job/weathercalculator/Extractors.py')
-    # spark_context.addFile('/job/weathercalculator/Calculators.py')
+
+    # data to be made available at every spark node
+    spark_context.addFile("/job/weathercalculator/FileParsers.py")
+    spark_context.addFile("/job/weathercalculator/Extractors.py")
+    spark_context.addFile("/job/weathercalculator/Calculators.py")
+    spark_context.addFile("/job/weathercalculator/ValueTypes.py")
 
     column_names = ["DTG", "NAME", "TX_DRYB_10"]
     column_types = {
@@ -56,7 +54,7 @@ def daily_min_max(raw_data_path):
         if isfile(join(abs_dir_path, f))
     ]
     dfs = []
-    for iteration, file_path in enumerate(all_files_path[:50]):
+    for iteration, file_path in enumerate(all_files_path):
         try:
             file_parser = FileParser(
                 file_path=file_path,
@@ -80,7 +78,7 @@ def daily_min_max(raw_data_path):
                 )
             )
 
-    # Unify all dataframes
+    # Unify all dataframes efficiently
     union_df = pairwise_union(dfs)
 
     # Add a dates column

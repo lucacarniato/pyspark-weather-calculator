@@ -1,4 +1,5 @@
 import os
+from os.path import abspath, join
 
 import pandas as pd
 from tabulate import tabulate
@@ -16,7 +17,6 @@ if __name__ == "__main__":
     # used cached data
     # cache_path = "/job/data/cache/2003_4_1_2019_3_31"
     # abs_cache_path = abspath(cache_path)
-    # print("Abs file path for chache file is "+abs_cache_path)
     # df = pd.read_csv(abs_cache_path)
     # df["Dates"] = pd.to_datetime(df["Dates"])
     # df = df.set_index("Dates").sort_index(ascending=True)

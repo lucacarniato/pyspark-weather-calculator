@@ -115,10 +115,10 @@ def compute_cold_waves(
             are_last_days_freezing = True
             start_freezing_days = start_date
             end_freezing_days = date
-            high_frost_temperature = df_slice.loc[
+            high_frost_temperatures = df_slice.loc[
                 df_slice[min_temp_column] < high_frost_temperature
             ].values
-            num_high_frost_days = num_high_frost_days + len(high_frost_temperature)
+            num_high_frost_days = num_high_frost_days + len(high_frost_temperatures)
             min_temp_in_cold_wave = min(
                 min_temp_in_cold_wave, np.min(df_slice[min_temp_column].values)
             )

@@ -8,7 +8,7 @@ def test_compute_heat_waves():
     """Tests `compute_heat_waves` computes the heat wave dates, duration and number of tropical days correctly on the
     reduced data
     """
-    path = "../data/2003_4_1_2019_3_31"
+    path = "../data/cache/2003_4_1_2019_3_31"
     df = pd.read_csv(path)
     df["Dates"] = pd.to_datetime(df["Dates"])
     df = df.set_index("Dates").sort_index(ascending=True)
@@ -35,7 +35,7 @@ def test_compute_cold_waves():
     """Tests `compute_heat_waves` computes the heat wave dates, duration and number of tropical days correctly on the
     reduced data
     """
-    path = "../data/2003_4_1_2019_3_31"
+    path = "../data/cache/2003_4_1_2019_3_31"
     df = pd.read_csv(path)
     df["Dates"] = pd.to_datetime(df["Dates"])
     df = df.set_index("Dates").sort_index(ascending=True)
