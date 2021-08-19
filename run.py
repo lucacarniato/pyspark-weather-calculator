@@ -10,8 +10,8 @@ from os.path import join, abspath
 
 if __name__ == "__main__":
 
-    # activate in production
-    raw_data_path = "/job/raw_data/uncompressed"
+    # raw data path
+    raw_data_path = "/job/data/raw_data"
     df = Transformers.daily_min_max(raw_data_path)
 
     # used cached data

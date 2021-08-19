@@ -34,12 +34,12 @@ Cold waves
 | ------------| -------------  | ------------------ | ------------------------- | --------------- |
 | Jan 30 2012 | Feb 08 2012    |                  9 |                         6 |           -18.8 |
 
-To run the application in Windows using Docker type following command commands:
+To run the application in Windows copy the KNMI data into data/raw_data and execute following docker command commands:
 
     docker build -t weathercalculator .
     docker run -v %cd%:/job weathercalculator /job/run.py
     
-To run the application in Linux using Docker type following command commands:
+To run the application in Linux copy the KNMI data into data/raw_data and execute following docker command commands:
 
     docker build -t weathercalculator .
     docker run -v $(pwd):/job weathercalculator /job/run.py
