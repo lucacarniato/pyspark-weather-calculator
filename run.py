@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     heat_waves = Calculators.compute_heat_waves(df)
     waves_date_formatted = Utils.format_waves(heat_waves)
-    print("Hot waves")
+    print("Heat waves")
     print(
         tabulate(
             waves_date_formatted,
