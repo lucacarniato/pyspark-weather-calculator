@@ -25,10 +25,10 @@ def daily_min_max(raw_data_path):
     """Computes the daily minimum and maximum temperatures from raw data
 
     Args:
-        raw_data_path (string): The path where the raw data file with intraday temperature measurements are located.
+        raw_data_path (string): The raw data path with intra day temperature measurements.
 
     Returns:
-        A data frame containing the daily min and max temperatures
+        A data frame containing the daily min and max temperatures.
     """
     spark = SparkSession.builder.appName("daily_min_max").getOrCreate()
     spark_context = spark.sparkContext

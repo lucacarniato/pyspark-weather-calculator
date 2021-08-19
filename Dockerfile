@@ -1,13 +1,16 @@
-#FROM godatadriven/pyspark
+FROM godatadriven/pyspark
 
-#COPY requirements.txt /opt/app/requirements.txt
+COPY requirements.txt /opt/app/requirements.txt
 
-#COPY weathercalculator/ /job/
+RUN pip install -r /opt/app/requirements.txt
 
-#RUN pip install -r /opt/app/requirements.txt
+COPY weathercalculator/ /job/weathercalculator
 
-#RUN ls -la /job/*
 
-FROM alpine
+#FROM alpine
 
-CMD ["sleep","3600"]
+#RUN mkdir job
+
+#COPY weathercalculator/ /job/weathercalculator
+
+#CMD ["sleep","3600"]
