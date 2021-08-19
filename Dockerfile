@@ -1,12 +1,9 @@
 FROM godatadriven/pyspark
 
-# Create app directory
-RUN mkdir -p /usr/src/app
+COPY requirements.txt /opt/app/requirements.txt
 
-# change working dir to /usr/src/app
-WORKDIR /usr/src/app
+COPY weathercalculator/ /job/
 
-# map volumns
-VOLUME . /usr/src/app
+RUN pip install -r /opt/app/requirements.txt
 
-CMD ["pyspark" , "--version" ]
+RUN ls -la /job/*

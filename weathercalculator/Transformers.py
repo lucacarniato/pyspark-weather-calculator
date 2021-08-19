@@ -21,8 +21,11 @@ def daily_min_max(
     start_date=dt(2003, 4, 1, 00, 00, 00),
     end_date=dt(2019, 3, 31, 00, 00, 00),
 ):
-    spark = SparkSession.builder.appName("compute_heat_waves").getOrCreate()
+    spark = SparkSession.builder.appName("daily_min_max").getOrCreate()
     spark_context = spark.sparkContext
+    #spark_context.addFile('/job/weathercalculator/FileParsers.py')
+    #spark_context.addFile('/job/weathercalculator/Extractors.py')
+    #spark_context.addFile('/job/weathercalculator/Calculators.py')
 
     column_names = ["DTG", "NAME", "TX_DRYB_10"]
     column_types = {
@@ -44,7 +47,7 @@ def daily_min_max(
         if isfile(join(abs_dir_path, f))
     ]
     dfs = []
-    for iteration, file_path in enumerate(all_files_path):
+    for iteration, file_path in enumerate(all_files_path[:50]):
         try:
             file_parser = FileParser(
                 file_path=file_path,
