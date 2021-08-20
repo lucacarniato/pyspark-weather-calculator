@@ -51,7 +51,6 @@ The application is organized as follow:
     + raw_data directory to store downloaded data.
     + cache directory to store the results of the transformations. These results can be reused when a client application 
     requests to calculate heatwaves within a period that has been calculated already.
-+ scripts: contains the Jupyter notebook using during the prototyping phase.
 + tests:
     + data: contains the data used by the unit tests.
     + unit: contains some tests to verify the correctness of the parsing functions (tokenizers) and heat/cold waves calculators.
