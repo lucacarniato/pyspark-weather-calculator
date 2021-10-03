@@ -1,6 +1,6 @@
 # Weather calculator
 
-The Python package weathercalculator solves Go Data Driven challenge of calculating the heat waves in the Netherlands. 
+The Python package weathercalculator solves a challenge of calculating the heat waves in the Netherlands. 
 A heatwave is defined as follow:
 
 "The KNMI defines a heatwave as a period of at least 5 consecutive days in which the maximum temperature in De Bilt exceeds 25 °C.
@@ -68,6 +68,6 @@ This directory structure facilitates extending the applications with additional 
 
 + Implement data extractors in weathercalculator/Extractors.py for downloading data.
 + Implement an Apache Airflow ETL job
-+ Implement the Cache invalidation mechanism for the cached filed stored in data/cache, for example when a heatwave or 
-a cold wave needs to be computed for a period outside the one already computed. 
++ Implement the Cache invalidation mechanism for the cache stored in data/cache, for example when heat waves or cold waves 
+need to be computed for a period outside the already computed one. 
 + Implement a REST API for using the results of the application (e.g. using Flask).
