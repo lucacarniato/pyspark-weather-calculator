@@ -1,7 +1,7 @@
 # PySpark weather calculator
 
-The PySpark weather solves a challenge of calculating the heat waves in the Netherlands from a large dataset of sensor data. 
-A heatwave is defined as follow:
+PySpark weather calculator solves a challenge of calculating the heat waves in the Netherlands from a large
+dataset of sensor data (20 Gb). A heatwave is defined as follow:
 
 "The KNMI defines a heatwave as a period of at least 5 consecutive days in which the maximum temperature in De Bilt exceeds 25 °C.
 Additionally, during these 5 day period, the maximum temperature in De Bilt should exceed 30 °C for at least 3 days."
