@@ -1,5 +1,4 @@
 import os
-from datetime import datetime as dt
 from os import listdir
 from os.path import isfile, join
 

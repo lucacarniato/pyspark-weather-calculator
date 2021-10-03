@@ -1,6 +1,6 @@
-# Weather calculator
+# PySpark weather calculator
 
-The Python package weathercalculator solves a challenge of calculating the heat waves in the Netherlands. 
+The PySpark weather solves a challenge of calculating the heat waves in the Netherlands from a large dataset of sensor data. 
 A heatwave is defined as follow:
 
 "The KNMI defines a heatwave as a period of at least 5 consecutive days in which the maximum temperature in De Bilt exceeds 25 °C.
@@ -28,7 +28,7 @@ As a bonus point, the cold waves were also computed. Cold waves are defined as f
 "A cold wave is a period of excessively cold weather with a minimum of five consecutive days below 
 freezing (max temperature below 0.0 °C) and at least three days with high frost (min temperature is lower than -10.0 °C)."
 
-Cold waves
+Computed cold waves
 
 | From date   | To date (inc.) | Duration (in days) | Number of high frost days | Min temperature |
 | ------------| -------------  | ------------------ | ------------------------- | --------------- |
