@@ -1,10 +1,9 @@
 # PySpark weather calculator
 
-PySpark weather calculator solves a challenge of calculating the heat waves in the Netherlands from a large
-dataset of sensor data (20 Gb). A heatwave is defined as follow:
+PySpark weather calculator solves the challenge of calculating the Netherlands' heat waves from a large sensor data dataset (20 Gb). A heatwave is defined as follows:
 
 "The KNMI defines a heatwave as a period of at least 5 consecutive days in which the maximum temperature in De Bilt exceeds 25 °C.
-Additionally, during these 5 day period, the maximum temperature in De Bilt should exceed 30 °C for at least 3 days."
+Additionally, during these 5 days, the maximum temperature in De Bilt should exceed 30 °C for at least 3 days."
 
 The application gives the following results:
 
@@ -23,9 +22,9 @@ Heatwaves
 | Jul 29 2018 | Aug 07 2018    |                  9 |                       4 |            33.9 |
 
 
-As a bonus point, the cold waves were also computed. Cold waves are defined as follow:
+As a bonus point, the cold waves were also computed. Cold waves are defined as follows:
 
-"A cold wave is a period of excessively cold weather with a minimum of five consecutive days below 
+"A cold wave is a period of freezing weather with a minimum of five consecutive days below 
 freezing (max temperature below 0.0 °C) and at least three days with high frost (min temperature is lower than -10.0 °C)."
 
 Computed cold waves
@@ -34,19 +33,19 @@ Computed cold waves
 | ------------| -------------  | ------------------ | ------------------------- | --------------- |
 | Jan 30 2012 | Feb 08 2012    |                  9 |                         6 |           -18.8 |
 
-To run the application in Windows copy the KNMI data into data/raw_data and execute following docker command commands:
+To run the application in Windows copy the KNMI data into data/raw_data and execute the following docker command commands:
 
     docker build -t weathercalculator .
     docker run -v %cd%:/job weathercalculator /job/run.py
     
-To run the application in Linux copy the KNMI data into data/raw_data and execute following docker command commands:
+To run the application in Linux copy the KNMI data into data/raw_data and execute the following docker command commands:
 
     docker build -t weathercalculator .
     docker run -v $(pwd):/job weathercalculator /job/run.py
 
 ## Application design
 
-The application is organized as follow:
+The application is organized as follows:
 + data, containing the following sub-directories:
     + raw_data directory to store downloaded data.
     + cache directory to store the results of the transformations. These results can be reused when a client application 
@@ -56,13 +55,13 @@ The application is organized as follow:
     + unit: contains some tests to verify the correctness of the parsing functions (tokenizers) and heat/cold waves calculators.
 + weathercalculator: contains the Python package. Most of the code is implemented as self-standing functions, 
 to facilitate future implementation of an AirFlow ETL job.
-    + Extractors.py: can contain the functions for downloading KNMI data and save them into data/raw_data.
+    + Extractors.py: can contain the functions for downloading KNMI data and saving them into data/raw_data.
     + Transformers.py: contains the functions used to process the files contained in data/raw_data. 
-    This file implements the PySpark queries used for computing the maximum and minimum daily temperatures from 10 minute data. 
+    This file implements the PySpark queries used for computing the maximum and minimum daily temperatures from 10-minute data. 
     The result of daily_min_max function is a reduced pandas data frame of 144KB. 
-    + Calculators.py: contains the functions used for calculating the heat and cold waves from the reduced data frame.
+    + Calculators.py: contains the functions for calculating the heat and cold waves from the reduced data frame.
 
-This directory structure facilitates extending the applications with additional Extractors, Transformers or Calculators.
+This directory structure facilitates extending the applications with additional Extractors, Transformers, or Calculators.
 
 # Future work
 
